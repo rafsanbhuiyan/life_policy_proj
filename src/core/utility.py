@@ -9,7 +9,7 @@ def get_resouce(filename, parser):
     cur_path = os.path.abspath(__file__)
     cur_dir = os.path.dirname(cur_path)
 
-    path = os.path.join(cur_dir, "..", "resource", filename)
+    path = os.path.join(cur_dir, "..", "resources", filename)
 
     with open(path, "rb") as file:
         return parser(file)

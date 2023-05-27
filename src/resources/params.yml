@@ -1,0 +1,7 @@
+mysql_creds:
+  host: 127.0.0.1
+  database: life_policy_db
+  user: root
+  password: Clscre90;
+
+
