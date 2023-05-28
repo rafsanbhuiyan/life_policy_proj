@@ -1,5 +1,6 @@
 import pymysql.cursors
 
+
 class MySQLConnector:
     def __init__(self, host, database, user, password):
         self.host = host
@@ -22,6 +23,32 @@ class MySQLConnector:
             return conn
         except pymysql.Error as e:
             print(f"Error wile connecting to MySQL DB: {repr(e)}")
+
+    def insert_data(self, table_name, df):
+        """convert dataframe into a list of tuple"""
+        tuples = [tuple(x) for x in df.to_numpy()]
+        # Get columns names from DataFrame
+        cols = ','.join(list(df.columns))
+
+        # Formulate the SQL query with placeholders for table name, column names, and values
+        # %s are placeholders that will be replaced with actual values when the query is executed
+        query = "INSERT INTO %s(%s) VALUES(%s)" % (table_name, cols, ','.join(['%s' for i in range(len(df.columns))]))
+
+        # Create cursor object from connection
+        cursor = self.connection.cursor()
+
+        try:
+            # Execute the SQL query. The second argument is a list of tuples that you want to insert.
+            cursor.executemany(query, tuples)
+            # Commit the transaction to the database
+            self.connection.commit()
+            print(f"Inserted {cursor.rowcount} rows successfully.")
+        except Exception as e:
+            # If there's an error, print the error
+            print("Error: ", e)
+        finally:
+            # Finally, close the cursor.
+            cursor.close()
 
     def close_connection(self):
         """Closing Connection"""
