@@ -42,7 +42,6 @@ column_order = ["number", "policy_holder_id", "data_provider_code", "data_provid
 # Transform raw data using process_raw_data() function
 life_policy_raw_df = process_raw_data(df=life_policy_raw_df, map_dict=str_map_dict,
                                       col_order=column_order)
-life_policy_raw_df.to_csv("transformed_raw.csv", index=False)
 
 # Step 1 Complete
 
@@ -56,8 +55,6 @@ life_policy_normalized_df.reset_index(drop=True, inplace=True)
 # Assign subset from life_policy_normalized_df to policy_normalized_df
 policy_normalized_df = life_policy_normalized_df[POLICY_DATA_COLUMN_SELECTION]
 
-#TODO: TESTING
-policy_normalized_df.to_csv("normalized.csv", index=False)
 # Step 2 Complete
 
 # Step 3 Process Policy_Holder Data
@@ -74,9 +71,6 @@ select_columns = ['id', 'policy_number', 'primary_name', 'primary_gender', 'prim
 policy_holders_df = process_policy_holder_data(df=life_policy_normalized_df, map_dict=str_map_dict,
                                                select_col=select_columns)
 
-#TODO: policy_holder_df
-policy_holders_df.to_csv("policy_holder.csv", index=False)
-
 # Step 4
 # Append all remaining policies from the raw data, which are not present
 # in the 'policy_normalized_df', to the 'policy_surplus_records_df'
@@ -90,8 +84,6 @@ policy_surplus_records_df = \
 
 # Reset Index
 policy_surplus_records_df.reset_index(drop=True, inplace=True)
-
-policy_surplus_records_df.to_csv("surplus.csv", index=False)
 
 # TODO: FOR LATER
 # Insert data from life_policy_raw_df to "policy_all_data" table in life_policy_db schema
