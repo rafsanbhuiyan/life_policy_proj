@@ -19,14 +19,6 @@ def process_raw_data(df, map_dict, col_order):
     return df
 
 
-# Select Columns for policy data
-def select_column_policy_data(df, select_cols):
-    #Select Columns
-    df = df[select_cols]
-
-    return df
-
-
 # Transform Policy Holder Dataframe
 def process_policy_holder_data(df, map_dict, select_col):
     # Rename

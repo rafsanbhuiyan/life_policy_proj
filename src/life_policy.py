@@ -1,6 +1,6 @@
 from core.utility import get_resouce, load_yaml
 from functions.life_policy_fucntions import dedup_policy
-from functions.transformation_functions import process_raw_data, select_column_policy_data, process_policy_holder_data
+from functions.transformation_functions import process_raw_data, process_policy_holder_data
 import service.mysql as mysql
 import pandas as pd
 
@@ -52,9 +52,7 @@ life_policy_normalized_df = dedup_policy(df=life_policy_raw_df, name="primary_na
 life_policy_normalized_df.reset_index(drop=True, inplace=True)
 
 # Assign subset from life_policy_normalized_df to policy_normalized_df
-# Assign subset from life_policy_normalized_df to policy_normalized_df
-policy_normalized_df = select_column_policy_data(df=life_policy_normalized_df,
-                                                 select_cols=POLICY_DATA_COLUMN_SELECTION)
+policy_normalized_df = life_policy_normalized_df[POLICY_DATA_COLUMN_SELECTION]
 # Step 2 Complete
 
 # Step 3 Process Policy_Holder Data
@@ -71,15 +69,11 @@ select_columns = ['id', 'policy_number', 'primary_name', 'primary_gender', 'prim
 policy_holders_df = process_policy_holder_data(df=life_policy_normalized_df, map_dict=str_map_dict,
                                                select_col=select_columns)
 
-# Step 4 Transform: Append all remaining policies from the raw data, which are not present
+# Step 4 Append all remaining policies from the raw data, which are not present
 # in the 'policy_normalized_df', to the 'policy_surplus_records_df'
 
-#Column Selection
-select_cols = ['number', 'policy_holder_id', 'data_provider_code','data_provider_description',
-               'data_provider_priority', 'effective_date', 'issue_date', 'maturity_date',
-               'origination_death_benefit', 'carrier_name']
-
-policy_surplus_records_df = life_policy_raw_df[select_cols]
+# Assign subset from 'life_policy_raw_df' to 'policy_surplus_records_df'
+policy_surplus_records_df = life_policy_raw_df[POLICY_DATA_COLUMN_SELECTION]
 
 # Filter policy_surplus_records_df by col number to include policies
 # not in 'policy_normalized_df' Dataframe and
