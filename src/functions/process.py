@@ -1,6 +1,7 @@
 import random
 import string
 
+
 def generate_random_alphanumeric(length):
     """This function generates random alphanumeric strings"""
 

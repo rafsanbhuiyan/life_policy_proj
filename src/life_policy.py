@@ -1,10 +1,10 @@
 from core.utility import get_resouce, load_yaml
-from functions.life_policy_fucntions import dedup_policy
-from functions.transformation_functions import process_raw_data, process_policy_holder_data
+from functions.process import dedup_policy
+from functions.transformation import process_raw_data, process_policy_holder_data
 import service.mysql as mysql
 import pandas as pd
 
-# CONSTANT VARIABLE
+# CONSTANT VARIABLES
 POLICY_DATA_COLUMN_SELECTION = ['number', 'policy_holder_id', 'data_provider_code', 'data_provider_description',
                                 'data_provider_priority', 'effective_date', 'issue_date', 'maturity_date',
                                 'origination_death_benefit', 'carrier_name']

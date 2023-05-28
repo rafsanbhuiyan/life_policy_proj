@@ -1,5 +1,5 @@
 import pandas as pd
-from functions.life_policy_fucntions import assign_policyholder_id
+from functions.process import assign_policyholder_id
 
 
 # Transform Raw Data
