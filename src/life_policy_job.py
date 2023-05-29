@@ -102,9 +102,6 @@ def main():
     db.insert_data(table_name="policy_surplus_records", df=policy_surplus_records_df)
 
 
-
-
-
     # TODO: BEFORE close_connection() <-- this is the last step
     #db.drop_database()
 
