@@ -2,27 +2,60 @@ import pymysql.cursors
 
 
 class MySQLConnector:
-    def __init__(self, host, database, user, password):
+    def __init__(self, host, user, password):
         self.host = host
-        self.database = database
         self.user = user
         self.password = password
-        self.connection = self.connect_to_db()
+        self.connection = self.connect_to_server()
 
-    def connect_to_db(self):
-        """Connect to database"""
+    def connect_to_server(self):
+        """Connect to MySQL server"""
         try:
             conn = pymysql.connect(
                 host=self.host,
-                database=self.database,
                 user=self.user,
                 password=self.password,
                 cursorclass=pymysql.cursors.DictCursor
             )
-            print("Connected to MySQL database")
+            print("Connected to MySQL server")
             return conn
         except pymysql.Error as e:
-            print(f"Error wile connecting to MySQL DB: {repr(e)}")
+            print(f"Error while connecting to MySQL server: {repr(e)}")
+
+    def create_database(self, database):
+        """Create a database"""
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(f"CREATE DATABASE {database}")
+                self.connection.commit()
+                print(f"Database '{database}' created successfully")
+        except pymysql.Error as e:
+            print(f"Error while creating the database: {repr(e)}")
+
+    def connect_to_db(self, database):
+        """Connect to a specific database"""
+        try:
+            conn = pymysql.connect(
+                host=self.host,
+                user=self.user,
+                password=self.password,
+                db=database,
+                cursorclass=pymysql.cursors.DictCursor
+            )
+            print(f"Connected to MySQL database '{database}'")
+            return conn
+        except pymysql.Error as e:
+            print(f"Error while connecting to MySQL DB: {repr(e)}")
+
+    def run_query(self, query):
+        """Run an arbitrary SQL query"""
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(query)
+                self.connection.commit()
+                print(f"Query executed successfully")
+        except pymysql.Error as e:
+            print(f"Error while executing the query: {repr(e)}")
 
     def insert_data(self, table_name, df):
         """convert dataframe into a list of tuple"""
@@ -49,6 +82,15 @@ class MySQLConnector:
         finally:
             # Finally, close the cursor.
             cursor.close()
+
+    def drop_database(self):
+        """Drop the database"""
+        try:
+            with self.connection.cursor() as cursor:
+                cursor.execute(f"DROP DATABASE {self.database}")
+                print(f"Database '{self.database}' dropped successfully")
+        except pymysql.Error as e:
+            print(f"Error while dropping the database: {repr(e)}")
 
     def close_connection(self):
         """Closing Connection"""
