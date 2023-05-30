@@ -25,6 +25,7 @@ def main():
 
     # Drop Database
     db.drop_database(params["mysql_creds"]["database"])
+    print("Database Drop Successful")
 
     #Close Connection
     db.close_connection()

@@ -20,16 +20,20 @@ transform_and_load:
 	@echo "Running life_policy_job.py..."
 	python3 $(SCRIPTS_DIR)/transform_and_load.py
 
+# PLEASE RUN THIS USING THE PYCHARM UI
 # This module provides API endpoints for life policy management using Flask.
 flask_api:
 	@echo "Running flask_api.py..."
+	lsof -t -i tcp:8000 | xargs kill
 	python3 $(SCRIPTS_DIR)/flask_api.py
 
+# PLEASE RUN THIS USING THE PYCHARM UI
 # This module provides a command-line interface for interacting with the life policy information system.
 policy_info_app:
 	@echo "Running policy_info_app.py..."
 	python3 $(SCRIPTS_DIR)/policy_info_app.py
 
+# PLEASE RUN THIS USING THE PYCHARM UI
 # This module drops the specified Database
 drop_database:
 	@echo "Running drop_database.py..."
