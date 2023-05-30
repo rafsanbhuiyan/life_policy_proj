@@ -143,6 +143,7 @@ These methods handle database connections, SQL queries, data insertion, and data
         - Default Schema: None <- We will create it via Python + SQL
 
 - Open Pycharm or preferred IDE
+    - **COPY AND PASTE THE 'life_policy_data.csv' in **src** DIRECTORY**
     - Refer to MakeFile for Step-by-Step Sequesce (Important: Some .py files can be ran directly through terminal using 'make [command here]'. Example: 'make create_db' or 'make drop_database')
     - Please do not run the following commands using makefile cmds (USE THE PYCHARM OR OTHER IDE UI INSTEAD)
         - flask_api
