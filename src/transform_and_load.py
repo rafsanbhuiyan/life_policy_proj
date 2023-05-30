@@ -102,10 +102,6 @@ def main():
     # Insert clean data, 'policy_surplus_records_df' to "policy_surplus_records table in life_policy_db schema
     db.insert_data(table_name="policy_surplus_records", df=policy_surplus_records_df)
 
-
-    # TODO: BEFORE close_connection() <-- this is the last step
-    #db.drop_database(params["mysql_creds"]["database"])
-
     #Close Connection
     db.close_connection()
 
