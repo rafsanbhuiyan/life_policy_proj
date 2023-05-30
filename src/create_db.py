@@ -1,4 +1,4 @@
-import service.mysql as mysql
+import service.MySQLConnector as mysql
 from core.utility import get_resouce, load_yaml
 
 """

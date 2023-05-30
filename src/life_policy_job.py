@@ -1,13 +1,14 @@
 from core.utility import get_resouce, load_yaml
 from functions.process import dedup_policy
 from functions.transformation import process_raw_data, process_policy_holder_data
-import service.mysql as mysql
+import service.MySQLConnector as mysql
 import pandas as pd
 
 # CONSTANT VARIABLES
 POLICY_DATA_COLUMN_SELECTION = ['number', 'policy_holder_id', 'data_provider_code', 'data_provider_description',
                                 'data_provider_priority', 'effective_date', 'issue_date', 'maturity_date',
                                 'origination_death_benefit', 'carrier_name']
+
 # SQL QUERY TO SELECT DB
 SELECT_DB = """USE life_policy_db;"""
 
@@ -33,7 +34,7 @@ def main():
     # Stage Data
 
     # Ingest Input CSV File and Convert to DataFrame
-    life_policy_raw_df = pd.read_csv("life_policy_data.csv")
+    life_policy_raw_df = pd.read_csv("/Users/rafsanbhuiyan/Documents/GitHub/life_policy_proj/src/life_policy_data.csv")
 
     # Transform Data
 
@@ -103,7 +104,7 @@ def main():
 
 
     # TODO: BEFORE close_connection() <-- this is the last step
-    #db.drop_database()
+    #db.drop_database(params["mysql_creds"]["database"])
 
     #Close Connection
     db.close_connection()
