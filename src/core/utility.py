@@ -2,8 +2,10 @@ import os
 import yaml
 from yaml import Loader
 
+
 def load_yaml(file):
     return yaml.load(file, Loader=Loader)
+
 
 def get_resouce(filename, parser):
     cur_path = os.path.abspath(__file__)
