@@ -149,7 +149,7 @@ These methods handle database connections, SQL queries, data insertion, and data
         - flask_api
         - policy_info_app
         
-## RUN THE FOLLOWING SCRIPTS IN SEQUENCE 
+- RUN THE FOLLOWING SCRIPTS IN SEQUENCE 
 
 - ** Terminal/Shell CMD: > make setup **
 - create_db.py              <-- Run via UI or make cmd
