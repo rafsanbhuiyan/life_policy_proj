@@ -13,6 +13,8 @@ The dataset contains various details about life insurance policies, including ef
 
 # Packages and Tools
 
+- Makefile
+- Pipfile
 - Pipenv
 - Python 3.11
 - pyyaml
