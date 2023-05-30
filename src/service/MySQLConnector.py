@@ -178,9 +178,11 @@ class MySQLConnector:
                             ) AS combined
                             WHERE primary_name=%s or secondary_name=%s;
                             """
-                cursor.execute(sql_query, (person_name,))
-                result = list(cursor.fetchone())
-                return result
+                cursor.execute(sql_query, (person_name, person_name))
+                policies = []
+                for row in cursor.fetchall():
+                    policies.append(row['policy_number'])
+                return policies
         except Exception as e:
             print(f"Failed to fetch data: {e}")
 

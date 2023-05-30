@@ -8,6 +8,8 @@ pyyaml = "*"
 pandas = "*"
 pymysql = "*"
 numpy = "*"
+flask = "*"
+requests = "*"
 
 [dev-packages]
 
