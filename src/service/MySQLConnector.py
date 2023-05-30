@@ -106,15 +106,24 @@ class MySQLConnector:
     # Functions for Restful API
     def get_policy_info(self, policy_number):
         """
-        Fetches policy info given a policy number
+        Given a policy number, return the effective_date , issue_date ,
+        maturity_date , death_benefit , and carrier_name to the best of our knowledge for
+        that policy
         """
         try:
             with self.connection.cursor() as cursor:
                 sql_query = """
                             SELECT effective_date, issue_date, maturity_date, 
-                                   origination_death_benefit, carrier_name  
-                            FROM policy_normalized 
-                            WHERE number = %s
+                                   origination_death_benefit as death_benefit, carrier_name  
+                            FROM
+                            (
+                                SELECT *  
+                                FROM life_policy_db.policy_normalized AS pn 
+                                UNION
+                                SELECT *
+                                FROM life_policy_db.policy_surplus_records AS psr 
+                            ) AS combined
+                            WHERE number=%s;
                             """
                 cursor.execute(sql_query, (policy_number,))
                 result = cursor.fetchone()
@@ -130,48 +139,72 @@ class MySQLConnector:
         try:
             with self.connection.cursor() as cursor:
                 sql_query = """
-                            SELECT carrier_name, COUNT(DISTINCT number) AS count_of_unique_policies
-                            FROM (
-                                SELECT pn.carrier_name, pn.number
-                                FROM life_policy_db.policy_holders AS ph
-                                LEFT JOIN life_policy_db.policy_normalized AS pn ON ph.policy_number = pn.number
+                            SELECT COUNT(number) AS count  
+                            FROM
+                            (
+                                SELECT *  
+                                FROM life_policy_db.policy_normalized AS pn 
                                 UNION
-                                SELECT psr.carrier_name, psr.number
-                                FROM life_policy_db.policy_holders AS ph
-                                LEFT JOIN life_policy_db.policy_surplus_records AS psr ON ph.id = psr.policy_holder_id
+                                SELECT *
+                                FROM life_policy_db.policy_surplus_records AS psr 
                             ) AS combined
-                            GROUP BY carrier_name
-                            HAVING carrier_name= %s;
+                            Where carrier_name=%s;
                             """
                 cursor.execute(sql_query, (carrier_name,))
-                result = cursor.fetchone()
+                result = cursor.fetchone()['count']
                 return result
         except Exception as e:
             print(f"Failed to fetch data: {e}")
 
     def get_person_policies(self, person_name):
         """
-        Given a carrier name, returns the count of all unique policies
-        we have from that carrier in our database
+        Given a person name, return a list of all policies for that
+        person regardless the position (primary or secondary) of the person on the
+        policy
         """
         try:
             with self.connection.cursor() as cursor:
                 sql_query = """
-                            SELECT primary_name, secondary_name, number as policy_number
+                            SELECT number as policy_number
                             FROM
                             (
-                                SELECT ph.primary_name, ph.secondary_name, pn.number
+                                SELECT ph.*, pn.*
                                 FROM life_policy_db.policy_holders AS ph
                                 LEFT JOIN life_policy_db.policy_normalized AS pn ON ph.policy_number = pn.number
                                 UNION
-                                SELECT ph.primary_name, ph.secondary_name, psr.number
+                                SELECT ph.*, psr.*
                                 FROM life_policy_db.policy_holders AS ph
                                 LEFT JOIN life_policy_db.policy_surplus_records AS psr ON ph.id = psr.policy_holder_id
                             ) AS combined
                             WHERE primary_name=%s or secondary_name=%s;
                             """
                 cursor.execute(sql_query, (person_name,))
-                result = cursor.fetchone()
+                result = list(cursor.fetchone())
+                return result
+        except Exception as e:
+            print(f"Failed to fetch data: {e}")
+
+    def get_data_provider_policy_count(self, data_provider_code):
+        """
+        Given a data provider code, return the count of all
+        policies that we have information on from that data provider
+        """
+        try:
+            with self.connection.cursor() as cursor:
+                sql_query = """
+                            SELECT COUNT(number) AS count  
+                            FROM
+                            (
+                                SELECT *  
+                                FROM life_policy_db.policy_normalized AS pn 
+                                UNION
+                                SELECT *
+                                FROM life_policy_db.policy_surplus_records AS psr 
+                            ) AS combined
+                            Where data_provider_code=%s;
+                            """
+                cursor.execute(sql_query, (data_provider_code,))
+                result = cursor.fetchone()['count']
                 return result
         except Exception as e:
             print(f"Failed to fetch data: {e}")
