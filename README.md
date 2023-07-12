@@ -1,4 +1,4 @@
-# Preston Ventures Data Engineering Project
+# Life Insurance Data Engineering Project
 
 ## Data Engineer: Rafsan Bhuiyan
 
